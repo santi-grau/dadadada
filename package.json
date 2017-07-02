@@ -24,6 +24,7 @@
     "ml-savitzky-golay": "^2.0.4",
     "nib": "*",
     "pug": "*",
+    "simplex-noise": "^2.3.0",
     "stringify": "*",
     "stylus": "*",
     "three": "*"

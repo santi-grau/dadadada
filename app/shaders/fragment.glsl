@@ -5,12 +5,8 @@
 varying vec2 vUv;
 
 uniform float time;
-uniform float energy;
-uniform vec2 resolution;
 uniform sampler2D logo;
 uniform sampler2D waveForm;
-
-
 
 #define M_PI 3.14159265358979
 
@@ -37,10 +33,10 @@ float cnoise(vec2 P) {
 	vec2 g01 = vec2(gx.z,gy.z);
 	vec2 g11 = vec2(gx.w,gy.w);
 	vec4 norm = taylorInvSqrt(vec4(dot(g00, g00), dot(g01, g01), dot(g10, g10), dot(g11, g11)));
-	g00 *= norm.x;  
-	g01 *= norm.y;  
-	g10 *= norm.z;  
-	g11 *= norm.w;  
+	g00 *= norm.x;
+	g01 *= norm.y;
+	g10 *= norm.z;
+	g11 *= norm.w;
 	float n00 = dot(g00, vec2(fx.x, fy.x));
 	float n10 = dot(g10, vec2(fx.y, fy.y));
 	float n01 = dot(g01, vec2(fx.z, fy.z));
@@ -51,23 +47,45 @@ float cnoise(vec2 P) {
 	return 2.3 * n_xy;
 }
 
+	
+float smin( float a, float b, float k ){
+	float h = clamp( 0.5+0.5*(b-a)/k, 0.0, 1.0 );
+	return mix( b, a, h ) - k*h*(1.0-h);
+}
+
 void main(){
-
 	float ratio = 0.199951171875;
-	// float ratio = 0.5;
 
-	float n = ( cnoise( vec2( vUv.x * 2.0 + time, 0.5 ) ) + 1.0 ) * 0.5;
-	float w = texture2D( waveForm, vUv ).r ;
-	float amplitude = 1.0;
-	//vec4 l = texture2D( logo, vec2( vUv.x, vUv.y + (w - 0.5) * amplitude ) );
-	// vec4 l = texture2D( logo, vec2( vUv.x, vUv.y - n * amplitude  ) );
+	vec4 w = texture2D( waveForm, vUv );
 
-	vec4 l = texture2D( logo, vec2( vUv.x, ( vUv.y - 0.5 ) * ratio + 0.5 ) );
+	float q = 0.0;
+	q = w.r;
+
+	float q2 = 0.0;
+	q2 = w.g;
+
+
+	if( vUv.x < 0.5 ){
+		vec4 s1 = texture2D( waveForm, vec2( 0.0, 0.5 ) );
+		vec4 s2 = texture2D( waveForm, vec2( 0.5, 0.5 ) );
+
+		float m = mix( s1.g, s2.g, vUv.x );
+		q = m;
+	}
+
+	if( vUv.x >= 0.5 ){
+		vec4 s1 = texture2D( waveForm, vec2( 0.5, 0.5 ) );
+		vec4 s2 = texture2D( waveForm, vec2( 1.0, 0.5 ) );
+
+		float m = mix( s1.g, s2.g, vUv.x );
+		q = m;
+	}
 	
-	// vec4 l = texture2D( logo, vec2( vUv.x, vUv.y ) );
-	
 
 
 
-	gl_FragColor = vec4( n, l.a, (vUv.y - 0.5 ) / 0.5, 1.0 );
+	vec4 l = texture2D( logo, vec2( vUv.x, ( vUv.y - 0.5 ) * ( ratio + ( 1.0 - q ) * ( 1.0 - q ) ) + 0.5 ) );
+	if( vUv.y > 0.5 ) l = texture2D( logo, vec2( vUv.x, ( vUv.y - 0.5 ) * ( ratio + ( 1.0 - q2 ) * ( 1.0 - q2 ) ) + 0.5 ) );
+
+	gl_FragColor = vec4( vUv.x , 0.0 , l.a , 1.0 );
 }

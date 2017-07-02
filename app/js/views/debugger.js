@@ -23,8 +23,8 @@ Debugger.prototype.addWaveform = function(){
 
 	this.wave2 = new THREE.Object3D();
 	this.waveForm.add( this.wave2 );
-	for( var i = 0 ; i < this.parent.audioData.dataArray2.length ; i++ ){
-		var width = this.parent.audioData.size / this.parent.audioData.dataArray2.length;
+	for( var i = 0 ; i < this.parent.audioData.frequencyArray.length ; i++ ){
+		var width = this.parent.audioData.size / this.parent.audioData.frequencyArray.length;
 		var geometry = new THREE.BoxBufferGeometry( width, 1, 1 );
 		var material = new THREE.MeshBasicMaterial( {color: 0x0000ff} );
 		var cube = new THREE.Mesh( geometry, material );
@@ -40,7 +40,7 @@ Debugger.prototype.addWaveform = function(){
 
 Debugger.prototype.step = function( time ){
 	for( var i = 0 ; i < this.wave.children.length ; i++ ) this.wave.children[i].position.y = this.parent.audioData.positions[i] / 128 * 50
-	for( var i = 0 ; i < this.wave2.children.length ; i++ ) this.wave2.children[i].position.y = this.parent.audioData.dataArray2[i] / 128 * 50 - 50
+	for( var i = 0 ; i < this.wave2.children.length ; i++ ) this.wave2.children[i].position.y = this.parent.audioData.frequencyArray[i] / 128 * 50 - 50
 }
 
 module.exports = Debugger;

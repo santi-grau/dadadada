@@ -14,9 +14,7 @@ var Dataviz = function( parent ){
 		uniforms: {
 			logo : { value : texture },
 			waveForm : { value : this.parent.audioData.audioTexture },
-			time : { value: 1.0 },
-			energy : { value: 0 },
-			resolution : { value: new THREE.Vector2( this.parent.containerEl.offsetWidth, this.parent.containerEl.offsetHeight  ) }
+			time : { value: 1.0 }
 		},
 		transparent : true,
 		vertexShader: vertexShader,
@@ -30,8 +28,10 @@ var Dataviz = function( parent ){
 
 Dataviz.prototype.step = function( time ){
 	this.time += 0.01;
+	
+	// for( var i = 0 ; i < this.parent.audioData.dataArray2.length ; i++ ) this.texPlane.material.uniforms.vals.value[i] = this.parent.audioData.dataArray2[i] / 255;
 	this.texPlane.material.uniforms.time.value = this.time;
-	this.texPlane.material.uniforms.energy.value = this.parent.audioData.timer.position.x;
+	// this.texPlane.material.uniforms.energy.value = this.parent.audioData.timer.position.x;
 }
 
 module.exports = Dataviz;
