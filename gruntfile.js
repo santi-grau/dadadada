@@ -18,14 +18,13 @@ module.exports = function(grunt) {
           dot: true,
           cwd: "app",
           src: [
-            "media/**/*",
-            "css/fonts/**/*",
+            "scripts/**/*"
           ],
           dest: "docs"
         }]
       }
     },
-    jade: {
+    pug: {
       compile: {
         options: {
           data: {
@@ -34,7 +33,7 @@ module.exports = function(grunt) {
           }
         },
         files: {
-          "docs/index.html": "app/views/main.jade"
+          "docs/index.html": "app/views/main.pug"
         }
       }
     },
@@ -55,7 +54,7 @@ module.exports = function(grunt) {
 
   // Load the plugin that provides the "uglify" task.
   grunt.loadNpmTasks('grunt-contrib-clean');
-  grunt.loadNpmTasks('grunt-contrib-jade');
+  grunt.loadNpmTasks('grunt-contrib-pug');
   grunt.loadNpmTasks('grunt-contrib-stylus');
   grunt.loadNpmTasks('grunt-contrib-copy');
 
@@ -63,7 +62,7 @@ module.exports = function(grunt) {
   grunt.registerTask('build', [
     'clean',
     'copy',
-    'jade',
+    'pug',
     'stylus'
   ]);
 };

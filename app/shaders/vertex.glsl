@@ -1,10 +1,14 @@
 #ifdef GL_ES
 	precision highp float;
 #endif
-
-varying vec2 vUv;
-
+attribute vec3 position;
 void main() {
-	vUv = uv;
-	gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+	gl_Position = vec4( position, 1.0 );
 }
+
+// varying vec2 vUv;
+
+// void main() {
+// 	vUv = uv;
+// 	gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+// }

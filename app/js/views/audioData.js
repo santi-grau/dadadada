@@ -1,3 +1,4 @@
+// var THREE = require('three');
 var Matter = require('matter-js');
 var SimplexNoise = require('simplex-noise');
 
@@ -79,6 +80,8 @@ AudioData.prototype.makeAnalyser = function( time ) {
 	source.connect(this.frequency);
 	
 	source.connect(audioCtx.destination);
+
+	audioCtx.close();
 };
 
 AudioData.prototype.playPause = function( time ) {

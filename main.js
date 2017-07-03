@@ -27,7 +27,9 @@ var port = Number( process.env.PORT || 5000 );
 // | App setup
 // └────────────────────────────────────────────────────────────────────┘
 
-browserify.settings({ transform: [stringify(['.svg', '.glsl'])]});
+browserify.settings({
+	transform: [stringify(['.svg', '.glsl'])]
+});
 
 app.set('views', __dirname + '/app/views');
 app.use('/js', browserify('./app/js'));
@@ -45,11 +47,6 @@ app.use(express.static(__dirname + '/app'));
 // └────────────────────────────────────────────────────────────────────┘
 
 app.get('/', function(req, res){
-	res.render( 'main', {title: pckg.name});
-});
-
-
-app.get('/exporter', function(req, res){
 	res.render( 'main', {title: pckg.name});
 });
 

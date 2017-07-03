@@ -1,3 +1,5 @@
+// var THREE = require('three');
+
 var Debugger = function( parent ){
 	this.parent = parent;
 	this.addWaveform();
@@ -33,7 +35,7 @@ Debugger.prototype.addWaveform = function(){
 	}
 
 
-	this.waveForm.position.set( -this.parent.containerEl.offsetWidth / 2 + this.parent.audioData.size / 2 , this.parent.containerEl.offsetHeight / 2 - 50, 0 );
+	this.waveForm.position.set( -this.parent.element.offsetWidth / 2 + this.parent.audioData.size / 2 , this.parent.element.offsetHeight / 2 - 50, 0 );
 
 	this.parent.scene.add( this.waveForm );
 }

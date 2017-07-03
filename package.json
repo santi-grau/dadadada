@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/santi-grau/remolacha"
+    "url": "https://github.com/santi-grau/dadadada"
   },
   "description": "DA DA DA DA DA",
   "main": "main.js",
@@ -23,6 +23,7 @@
     "matter-js": "^0.12.0",
     "ml-savitzky-golay": "^2.0.4",
     "nib": "*",
+    "prependify": "^1.3.0",
     "pug": "*",
     "simplex-noise": "^2.3.0",
     "stringify": "*",
@@ -35,6 +36,7 @@
     "grunt-contrib-clean": "^1.0.0",
     "grunt-contrib-copy": "^1.0.0",
     "grunt-contrib-jade": "^1.0.0",
+    "grunt-contrib-pug": "^1.0.0",
     "grunt-contrib-stylus": "^1.2.0"
   },
   "engines": {
