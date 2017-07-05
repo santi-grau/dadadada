@@ -11,7 +11,7 @@ var App = function() {
 	
 	var logos = document.getElementsByClassName('dadadada');
 	this.logos = [];
-	for( var i = 0 ; i < logos.length ; i++ ) this.logos.push( new Logo( logos[i] ) );
+	for( var i = 0 ; i < 1 ; i++ ) this.logos.push( new Logo( logos[i] ) );
 	
 	// this.containerEl = document.getElementById('main');
 

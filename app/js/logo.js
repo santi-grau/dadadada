@@ -30,14 +30,13 @@ var Logo = function( element ){
 	// this.scene = new THREE.Scene();
 	// this.camera = new THREE.OrthographicCamera( );
 
-	// this.audioData = new AudioData( this );
+	this.audioData = new AudioData( this );
 	// this.debugger = new Debugger( this );
 	this.dataViz = new Dataviz( this );
 
 	element.addEventListener( 'click', this.click.bind( this ) );
 	window.addEventListener( 'scroll', this.scroll.bind( this ) );
 
-	
 	this.step();
 	this.resize();
 	// this.active = false;
@@ -76,13 +75,13 @@ Logo.prototype.scroll = function( e ){
 }
 
 Logo.prototype.resizeEnd = function( ) {
-	console.log('resize ' + this.element)
+	// console.log('resize ' + this.element)
 }
 
 Logo.prototype.step = function( time ) {
 	window.requestAnimationFrame( this.step.bind( this ) );
 	// if( !this.active ) return;
-	// this.audioData.step();
+	this.audioData.step();
 	this.dataViz.step();
 	// this.renderer.render( this.scene, this.camera );
 	this.size = [ this.element.offsetWidth, this.element.offsetHeight ];

@@ -1,7 +1,7 @@
 // var THREE = require('three');
 var vertexShader = require('./../../shaders/vertex.glsl');
 var fragmentShader = require('./../../shaders/fragment.glsl');
-var logoSVG = require('./../../media/logo.svg');
+var Texture = require('./texture');
 
 var Dataviz = function( parent ){
 	this.parent = parent;
@@ -15,34 +15,18 @@ var Dataviz = function( parent ){
 	this.gl.bindBuffer( this.gl.ARRAY_BUFFER, this.buffer );
 	this.gl.bufferData( this.gl.ARRAY_BUFFER, new Float32Array( [ - 1.0, - 1.0, 1.0, - 1.0, - 1.0, 1.0, 1.0, - 1.0, 1.0, 1.0, - 1.0, 1.0 ] ), this.gl.STATIC_DRAW );
 	this.currentProgram = this.createProgram( vertexShader, fragmentShader );
+	this.scaleLocation = this.gl.getUniformLocation( this.currentProgram, 'scale' );
 	this.timeLocation = this.gl.getUniformLocation( this.currentProgram, 'time' );
 	this.resolutionLocation = this.gl.getUniformLocation( this.currentProgram, 'resolution' );
  	
-	this.logoMargin = 0.06;
- 	var logo = new DOMParser().parseFromString(logoSVG, "image/svg+xml");
- 	var viewBox = logo.getElementsByTagName('svg')[0].getAttribute('viewBox').split(' ');
- 	var canvas = document.createElement('canvas');
- 	var logoAR = viewBox[3] / viewBox[2];
-	canvas.width  = 2048;
-	canvas.height = 2048;
-	var ctx = canvas.getContext('2d');
-
- 	var img = new Image();
- 	var _this = this;
- 	img.onload = function () {
-		ctx.clearRect(0,0, ctx.canvas.width, ctx.canvas.height);
-		var w = ctx.canvas.width - ( canvas.width * _this.logoMargin ) * 2;
-		var h = w * logoAR;
-		ctx.drawImage(this, canvas.width * _this.logoMargin, canvas.height / 2 - h / 2, w, h );  
-		_this.imageLoaded( ctx.canvas.toDataURL() );
-    };
-
-    img.src = 'data:image/svg+xml,' + '<svg xmlns="http://www.w3.org/2000/svg" width = "'+viewBox[2]+'" height = "'+viewBox[3]+'" >' + logoSVG + '</svg>';
+ 	if( !window.texture ) new Texture( this, 2048 );
+	else this.makeTexture();
 
 	this.resize();
 }
 
-Dataviz.prototype.imageLoaded = function( data ){
+Dataviz.prototype.makeTexture = function( ){
+
 	var _this = this;
 	this.texture = new Image();
 	this.texture.onload = function () {
@@ -51,14 +35,13 @@ Dataviz.prototype.imageLoaded = function( data ){
 
 		_this.gl.texParameteri(_this.gl.TEXTURE_2D, _this.gl.TEXTURE_WRAP_S, _this.gl.CLAMP_TO_EDGE);
 		_this.gl.texParameteri(_this.gl.TEXTURE_2D, _this.gl.TEXTURE_WRAP_T, _this.gl.CLAMP_TO_EDGE);
-		_this.gl.texParameteri(_this.gl.TEXTURE_2D, _this.gl.TEXTURE_MIN_FILTER, _this.gl.NEAREST);
+		_this.gl.texParameteri(_this.gl.TEXTURE_2D, _this.gl.TEXTURE_MIN_FILTER, _this.gl.LINEAR);
 		_this.gl.texParameteri(_this.gl.TEXTURE_2D, _this.gl.TEXTURE_MAG_FILTER, _this.gl.NEAREST);
 
 		_this.textureReady = true;
 	}
-	this.texture.src = data;
+	this.texture.src = window.texture;
 }
-
 
 Dataviz.prototype.createProgram = function( vertex, fragment ){
 	var program = this.gl.createProgram();
@@ -98,7 +81,6 @@ Dataviz.prototype.render = function(){
 	this.gl.uniform1f( this.timeLocation, this.parameters.time / 1000 );
 	this.gl.uniform2f( this.resolutionLocation, this.parameters.screenWidth, this.parameters.screenHeight );
 
-	
 	// this.gl.bindTexture( this.gl.TEXTURE_2D, this.texture);
 	this.gl.texImage2D( this.gl.TEXTURE_2D, 0, this.gl.RGBA, this.gl.RGBA, this.gl.UNSIGNED_BYTE, this.texture );
  
@@ -112,13 +94,11 @@ Dataviz.prototype.render = function(){
 
 Dataviz.prototype.resize = function(){
 	var dpr = window.devicePixelRatio || 1;
-	if ( this.parent.canvas.width * dpr != this.parent.canvas.clientWidth * dpr || this.parent.canvas.height * dpr != this.parent.canvas.clientHeight * dpr ) {
-		this.parent.canvas.width = this.parent.canvas.clientWidth * dpr;
-		this.parent.canvas.height = this.parent.canvas.clientHeight * dpr;
-		this.parameters.screenWidth = this.parent.canvas.width;
-		this.parameters.screenHeight = this.parent.canvas.height;
-		this.gl.viewport( 0, 0, this.parent.canvas.width, this.parent.canvas.height );
-	}
+	this.parent.canvas.width = this.parent.canvas.clientWidth * dpr;
+	this.parent.canvas.height = this.parent.canvas.clientHeight * dpr;
+	this.parameters.screenWidth = this.parent.canvas.width;
+	this.parameters.screenHeight = this.parent.canvas.height;
+	this.gl.viewport( 0, 0, this.parent.canvas.width, this.parent.canvas.height );
 }
 
 Dataviz.prototype.step = function( time ){

@@ -9,10 +9,12 @@ var AudioData = function( parent ) {
 	this.time = 0;
 	this.timeInc = 0.001;
 
-	this.audio = new Audio();
-	this.audio.src = 'media/t2.mp3';
-	this.audio.controls = true;
-	this.audio.autoplay = false;
+	if( !window.audioDada ){
+		window.audioDada = new Audio();
+		window.audioDada.controls = true;
+		window.audioDada.autoplay = false;
+		console.log(window.audioDada)
+	}
 	this.playing = false;
 	this.positions = [];
 
@@ -20,13 +22,13 @@ var AudioData = function( parent ) {
 
 	this.simplex = new SimplexNoise(Math.random);
 
-	this.data = new Uint8Array(this.size * 3);
-	this.audioTexture = new THREE.DataTexture( this.data, this.size, 1, THREE.RGBFormat );
-	this.audioTexture.needsUpdate = true;
+	// this.data = new Uint8Array(this.size * 3);
+	// window.audioDadaTexture = new THREE.DataTexture( this.data, this.size, 1, THREE.RGBFormat );
+	// window.audioDadaTexture.needsUpdate = true;
 
 	this.makeAnalyser();
 
-	var engine = Matter.Engine.create();
+	// var engine = Matter.Engine.create();
 
 	// create a renderer
 	// var render = Matter.Render.create({
@@ -35,34 +37,34 @@ var AudioData = function( parent ) {
 	// });
 	// Matter.Render.run(render);
 
-	engine.world.gravity.y = 0;
+	// engine.world.gravity.y = 0;
 
-	this.top = [];
-	this.bot = [];
+	// this.top = [];
+	// this.bot = [];
 
-	for( var i = 0 ; i < this.size ; i ++ ){
-		var body = Matter.Bodies.circle( i * 10, 200, 2, { collisionFilter : 0, mass :  1 } );
-		var constrain = Matter.Constraint.create({ pointA : { x : i * 10, y : 200 }, bodyB : body, stiffness : 0.1 });
+	// for( var i = 0 ; i < this.size ; i ++ ){
+	// 	var body = Matter.Bodies.circle( i * 10, 200, 2, { collisionFilter : 0, mass :  1 } );
+	// 	var constrain = Matter.Constraint.create({ pointA : { x : i * 10, y : 200 }, bodyB : body, stiffness : 0.1 });
 
-		this.top.push( body );
+	// 	this.top.push( body );
 
-		Matter.World.add( engine.world, [ body, constrain ] );
-		if( i == 0 ) Matter.World.add( engine.world, Matter.Constraint.create({ pointA : { x : - 10, y : 200 }, bodyB : body, length : 0, stiffness : .1 }) );
-		if( i > 0 ) Matter.World.add( engine.world, Matter.Constraint.create({ bodyA : this.top[i-1], bodyB : body, length : 0, stiffness : .1 }) );
-		if( i == this.size - 1 ) Matter.World.add( engine.world, Matter.Constraint.create({ pointA : { x : (i + 1) * 10, y : 200 }, bodyB : body, length : 0, stiffness : .1 }) );
+	// 	Matter.World.add( engine.world, [ body, constrain ] );
+	// 	if( i == 0 ) Matter.World.add( engine.world, Matter.Constraint.create({ pointA : { x : - 10, y : 200 }, bodyB : body, length : 0, stiffness : .1 }) );
+	// 	if( i > 0 ) Matter.World.add( engine.world, Matter.Constraint.create({ bodyA : this.top[i-1], bodyB : body, length : 0, stiffness : .1 }) );
+	// 	if( i == this.size - 1 ) Matter.World.add( engine.world, Matter.Constraint.create({ pointA : { x : (i + 1) * 10, y : 200 }, bodyB : body, length : 0, stiffness : .1 }) );
 
-		var body = Matter.Bodies.circle( i * 10, 200, 2, { collisionFilter : 0, mass :  1 } );
-		var constrain = Matter.Constraint.create({ pointA : { x : i * 10, y : 200 }, bodyB : body, stiffness : .1 });
+	// 	var body = Matter.Bodies.circle( i * 10, 200, 2, { collisionFilter : 0, mass :  1 } );
+	// 	var constrain = Matter.Constraint.create({ pointA : { x : i * 10, y : 200 }, bodyB : body, stiffness : .1 });
 
-		this.bot.push( body );
+	// 	this.bot.push( body );
 
-		Matter.World.add( engine.world, [ body, constrain ] );
-		if( i == 0 ) Matter.World.add( engine.world, Matter.Constraint.create({ pointA : { x : - 10, y : 200 }, bodyB : body, length : 0, stiffness : .1 }) );
-		if( i > 0 ) Matter.World.add( engine.world, Matter.Constraint.create({ bodyA : this.bot[i-1], bodyB : body, length : 0, stiffness : .1 }) );
-		if( i == this.size - 1 ) Matter.World.add( engine.world, Matter.Constraint.create({ pointA : { x : (i + 1) * 10, y : 200 }, bodyB : body, length : 0, stiffness : .1 }) );
-	}
+	// 	Matter.World.add( engine.world, [ body, constrain ] );
+	// 	if( i == 0 ) Matter.World.add( engine.world, Matter.Constraint.create({ pointA : { x : - 10, y : 200 }, bodyB : body, length : 0, stiffness : .1 }) );
+	// 	if( i > 0 ) Matter.World.add( engine.world, Matter.Constraint.create({ bodyA : this.bot[i-1], bodyB : body, length : 0, stiffness : .1 }) );
+	// 	if( i == this.size - 1 ) Matter.World.add( engine.world, Matter.Constraint.create({ pointA : { x : (i + 1) * 10, y : 200 }, bodyB : body, length : 0, stiffness : .1 }) );
+	// }
 
-	Matter.Engine.run(engine);
+	// Matter.Engine.run(engine);
 }
 
 AudioData.prototype.makeAnalyser = function( time ) {
@@ -75,7 +77,7 @@ AudioData.prototype.makeAnalyser = function( time ) {
 	this.frequency.fftSize = this.size * 2;
 	this.frequencyArray = new Uint8Array(this.size);
 
-	var source = audioCtx.createMediaElementSource(this.audio);
+	var source = audioCtx.createMediaElementSource(window.audioDada);
 	source.connect(this.domain);
 	source.connect(this.frequency);
 	
@@ -84,10 +86,11 @@ AudioData.prototype.makeAnalyser = function( time ) {
 	audioCtx.close();
 };
 
-AudioData.prototype.playPause = function( time ) {
+AudioData.prototype.playPause = function( ) {
+	window.audioDada.src = 'media/t2.mp3';
 	this.playing = !this.playing;
-	if( this.playing ) this.audio.play();
-	else this.audio.pause();
+	if( this.playing ) window.audioDada.play();
+	else window.audioDada.pause();
 };
 
 AudioData.prototype.updateTexture = function( ) {
@@ -115,16 +118,14 @@ AudioData.prototype.updateTexture = function( ) {
 		vals[ i * 3 + 2 ] = 0;
 	}
 
-	this.data.set(vals);
-	this.audioTexture.needsUpdate = true;
-	
 };
 
 AudioData.prototype.step = function( time ) {
+	console.log(window.audioDada.currentTime)
 	this.time += this.timeInc;
-	this.domain.getByteTimeDomainData(this.domainArray);
-	this.frequency.getByteFrequencyData(this.frequencyArray);
-	this.updateTexture();
+	// this.domain.getByteTimeDomainData(this.domainArray);
+	// this.frequency.getByteFrequencyData(this.frequencyArray);
+	// this.updateTexture();
 };
 
 module.exports = AudioData;
