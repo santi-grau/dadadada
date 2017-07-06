@@ -55,8 +55,11 @@ void main( void ) {
 	float q1 = 1.0;
 	float q2 = 1.0;
 
-	q1 = min( 1.0, max( 0.001, ( uv.x - 0.06 ) / ( 1.0 - 0.06 * 2.0 ) ) );
-	q2 = min( 1.0, max( 0.001, ( uv.x - 0.06 ) / ( 1.0 - 0.06 * 2.0 ) ) );
+	q1 = 0.0;
+	q2 = 0.0;
+
+	// q1 = min( 1.0, max( 0.001, ( uv.x - 0.06 ) / ( 1.0 - 0.06 * 2.0 ) ) );
+	// q2 = min( 1.0, max( 0.001, ( uv.x - 0.06 ) / ( 1.0 - 0.06 * 2.0 ) ) );
 
 	float scale = resolution.y/resolution.x;
 
@@ -75,5 +78,5 @@ void main( void ) {
 	vec4 s1 = texture2D( u_texture, vec2( uv.x, a ) );
 	if( uv.y > 0.5 ) s1 = texture2D( u_texture, vec2( uv.x, b ) );
 	
-	gl_FragColor = vec4( s1.a, s1.a, uv.y, 1.0 );
+	gl_FragColor = vec4( uv.x, s1.a, uv.y, 1.0 );
 }

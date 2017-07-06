@@ -54,7 +54,6 @@ var AudioData = function( parent ) {
 	render.canvas.style.left = '0px';
 	render.canvas.style['z-index'] = '10';
 	
-	
 	Matter.Render.run(render);
 	render.canvas.style.background = 'rgba(0,0,0,0)';
 
@@ -67,10 +66,9 @@ var AudioData = function( parent ) {
 	this.w = this.parent.element.offsetWidth;
 	this.h = this.parent.element.offsetHeight;
 
-	console.log(this.h)
 
 	for( var i = 0 ; i < this.size ; i ++ ){
-		console.log(i / (this.size - 1))
+
 		var body = Matter.Bodies.circle( this.logoMargin * this.w + ( this.w - ( this.logoMargin * 2 * this.w ) ) * i / (this.size - 1), this.h/2, 2, { collisionFilter : 0, mass :  1 } );
 		var constrain = Matter.Constraint.create({ pointA : { x : this.logoMargin * this.w + ( this.w - ( this.logoMargin * 2 * this.w ) ) * i / (this.size - 1), y : this.h/2 }, bodyB : body, stiffness : 0.1 });
 
@@ -79,7 +77,7 @@ var AudioData = function( parent ) {
 		Matter.World.add( engine.world, [ body, constrain ] );
 		if( i == 0 ) Matter.World.add( engine.world, Matter.Constraint.create({ pointA : { x : - 10, y : this.h/2 }, bodyB : body, length : 0, stiffness : .1 }) );
 		if( i > 0 ) Matter.World.add( engine.world, Matter.Constraint.create({ bodyA : this.top[i-1], bodyB : body, length : 0, stiffness : .1 }) );
-		if( i == this.size - 1 ) Matter.World.add( engine.world, Matter.Constraint.create({ pointA : { x : (i + 1) * 10, y : this.h/2 }, bodyB : body, length : 0, stiffness : .1 }) );
+		if( i == this.size - 1 ) Matter.World.add( engine.world, Matter.Constraint.create({ pointA : { x : this.w, y : this.h/2 }, bodyB : body, length : 0, stiffness : .1 }) );
 
 		var body = Matter.Bodies.circle( this.logoMargin * this.w + ( this.w - ( this.logoMargin * 2 * this.w ) ) * i / (this.size - 1), this.h/2, 2, { collisionFilter : 0, mass :  1 } );
 		var constrain = Matter.Constraint.create({ pointA : { x : this.logoMargin * this.w + ( this.w - ( this.logoMargin * 2 * this.w ) ) * i / (this.size - 1), y : this.h/2 }, bodyB : body, stiffness : .1 });
@@ -89,7 +87,7 @@ var AudioData = function( parent ) {
 		Matter.World.add( engine.world, [ body, constrain ] );
 		if( i == 0 ) Matter.World.add( engine.world, Matter.Constraint.create({ pointA : { x : - 10, y : this.h/2 }, bodyB : body, length : 0, stiffness : .1 }) );
 		if( i > 0 ) Matter.World.add( engine.world, Matter.Constraint.create({ bodyA : this.bot[i-1], bodyB : body, length : 0, stiffness : .1 }) );
-		if( i == this.size - 1 ) Matter.World.add( engine.world, Matter.Constraint.create({ pointA : { x : (i + 1) * 10, y : this.h/2 }, bodyB : body, length : 0, stiffness : .1 }) );
+		if( i == this.size - 1 ) Matter.World.add( engine.world, Matter.Constraint.create({ pointA : { x : this.w, y : this.h/2 }, bodyB : body, length : 0, stiffness : .1 }) );
 	}
 
 	Matter.Engine.run(engine);
@@ -125,14 +123,6 @@ AudioData.prototype.updateTexture = function( ) {
 	for( var i = 0 ; i < val2 ; i ++ ) if( this.playing )  Matter.Body.setPosition(  this.bot[i], { x : this.logoMargin * this.w + ( this.w - ( this.logoMargin * 2 * this.w ) ) * i / (this.size - 1), y : this.h/2 + ( ( window._DADADADA.frequencyArray[val2-i-1]) / 255 * 50 ) } );
 	for( var i = val2 ; i < this.size ; i ++ ) if( this.playing )  Matter.Body.setPosition(  this.bot[i], { x : this.logoMargin * this.w + ( this.w - ( this.logoMargin * 2 * this.w ) ) * i / (this.size - 1), y : this.h/2 + ( ( window._DADADADA.frequencyArray[i-val2]) / 255 * 50 ) } );
 	for( var i = 0 ; i < val2 ; i ++ ) this.bot[i].position.x = this.logoMargin * this.w + ( this.w - ( this.logoMargin * 2 * this.w ) ) * i / (this.size - 1);
-
-	var vals = new Uint8Array(this.size * 3);
-	
-	for( var i = 0 ; i < this.size ; i++ ){
-		vals[ i * 3 ] =  ( this.h/2 - this.top[i].position.y  ) / 50 * 255 ;
-		vals[ i * 3 + 1 ] = ( this.bot[i].position.y - this.h/2  ) / 50 * 255 ;
-		vals[ i * 3 + 2 ] = 0;
-	}
 };
 
 AudioData.prototype.step = function( time ) {

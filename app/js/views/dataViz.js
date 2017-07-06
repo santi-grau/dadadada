@@ -1,4 +1,3 @@
-// var THREE = require('three');
 var vertexShader = require('./../../shaders/vertex.glsl');
 var fragmentShader = require('./../../shaders/fragment.glsl');
 var Texture = require('./texture');
@@ -101,12 +100,8 @@ Dataviz.prototype.resize = function(){
 }
 
 Dataviz.prototype.step = function( time ){
-	// this.time += 0.01;
-
+	this.time += 0.01;
 	if( this.textureReady ) this.render();
-	// for( var i = 0 ; i < this.parent.audioData.dataArray2.length ; i++ ) this.texPlane.material.uniforms.vals.value[i] = this.parent.audioData.dataArray2[i] / 255;
-	// this.texPlane.material.uniforms.time.value = this.time;
-	// this.texPlane.material.uniforms.energy.value = this.parent.audioData.timer.position.x;
 }
 
 module.exports = Dataviz;
