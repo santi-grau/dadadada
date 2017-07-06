@@ -1,4 +1,3 @@
-// var THREE = require('three');
 var Matter = require('matter-js');
 var SimplexNoise = require('simplex-noise');
 
@@ -9,123 +8,139 @@ var AudioData = function( parent ) {
 	this.time = 0;
 	this.timeInc = 0.001;
 
-	if( !window.audioDada ){
-		window.audioDada = new Audio();
-		window.audioDada.controls = true;
-		window.audioDada.autoplay = false;
-		console.log(window.audioDada)
+	if( !window._DADADADA.audio ){
+		window._DADADADA.audio = new Audio();
+		window._DADADADA.audio.controls = true;
+		window._DADADADA.audio.autoplay = false;
+		window._DADADADA.audio.setAttribute('type','audio/mpeg');
 	}
-	this.playing = false;
-	this.positions = [];
+	if( !window._DADADADA.audioCtx ) window._DADADADA.audioCtx = new ( window.AudioContext || window.webkitAudioContext )();
+	if( !window._DADADADA.domain ){
+		window._DADADADA.domain = window._DADADADA.audioCtx.createAnalyser();
+		window._DADADADA.domain.fftSize = this.size * 2;
+	}
+	if( !window._DADADADA.domainArray ) window._DADADADA.domainArray = new Uint8Array(this.size);
+	if( !window._DADADADA.frequency ){
+		window._DADADADA.frequency = window._DADADADA.audioCtx.createAnalyser();
+		window._DADADADA.frequency.fftSize = this.size * 2;
+	}
+	if( !window._DADADADA.frequencyArray ) window._DADADADA.frequencyArray = new Uint8Array(this.size);
+	if( !window._DADADADA.source ){
+		window._DADADADA.source = window._DADADADA.audioCtx.createMediaElementSource(window._DADADADA.audio);
+		window._DADADADA.source.connect( window._DADADADA.domain );
+		window._DADADADA.source.connect( window._DADADADA.frequency );
+		window._DADADADA.source.connect( window._DADADADA.audioCtx.destination );
+	}
 
-	this.space = 10;
+	this.playing = false;
 
 	this.simplex = new SimplexNoise(Math.random);
 
-	// this.data = new Uint8Array(this.size * 3);
-	// window.audioDadaTexture = new THREE.DataTexture( this.data, this.size, 1, THREE.RGBFormat );
-	// window.audioDadaTexture.needsUpdate = true;
-
-	this.makeAnalyser();
-
-	// var engine = Matter.Engine.create();
+	var engine = Matter.Engine.create();
 
 	// create a renderer
-	// var render = Matter.Render.create({
-	// 	element: document.body,
-	// 	engine: engine
-	// });
-	// Matter.Render.run(render);
+	var render = Matter.Render.create({
+		element: this.parent.element,
+		engine: engine,
+		options : {
+			width : this.parent.element.offsetWidth,
+			height : this.parent.element.offsetHeight
 
-	// engine.world.gravity.y = 0;
+		}
+	});
+	
+	render.canvas.style.position = 'absolute';
+	render.canvas.style.top = '0px';
+	render.canvas.style.left = '0px';
+	render.canvas.style['z-index'] = '10';
+	
+	
+	Matter.Render.run(render);
+	render.canvas.style.background = 'rgba(0,0,0,0)';
 
-	// this.top = [];
-	// this.bot = [];
+	engine.world.gravity.y = 0;
 
-	// for( var i = 0 ; i < this.size ; i ++ ){
-	// 	var body = Matter.Bodies.circle( i * 10, 200, 2, { collisionFilter : 0, mass :  1 } );
-	// 	var constrain = Matter.Constraint.create({ pointA : { x : i * 10, y : 200 }, bodyB : body, stiffness : 0.1 });
+	this.top = [];
+	this.bot = [];
 
-	// 	this.top.push( body );
+	this.logoMargin = this.parent.logoMargin
+	this.w = this.parent.element.offsetWidth;
+	this.h = this.parent.element.offsetHeight;
 
-	// 	Matter.World.add( engine.world, [ body, constrain ] );
-	// 	if( i == 0 ) Matter.World.add( engine.world, Matter.Constraint.create({ pointA : { x : - 10, y : 200 }, bodyB : body, length : 0, stiffness : .1 }) );
-	// 	if( i > 0 ) Matter.World.add( engine.world, Matter.Constraint.create({ bodyA : this.top[i-1], bodyB : body, length : 0, stiffness : .1 }) );
-	// 	if( i == this.size - 1 ) Matter.World.add( engine.world, Matter.Constraint.create({ pointA : { x : (i + 1) * 10, y : 200 }, bodyB : body, length : 0, stiffness : .1 }) );
+	console.log(this.h)
 
-	// 	var body = Matter.Bodies.circle( i * 10, 200, 2, { collisionFilter : 0, mass :  1 } );
-	// 	var constrain = Matter.Constraint.create({ pointA : { x : i * 10, y : 200 }, bodyB : body, stiffness : .1 });
+	for( var i = 0 ; i < this.size ; i ++ ){
+		console.log(i / (this.size - 1))
+		var body = Matter.Bodies.circle( this.logoMargin * this.w + ( this.w - ( this.logoMargin * 2 * this.w ) ) * i / (this.size - 1), this.h/2, 2, { collisionFilter : 0, mass :  1 } );
+		var constrain = Matter.Constraint.create({ pointA : { x : this.logoMargin * this.w + ( this.w - ( this.logoMargin * 2 * this.w ) ) * i / (this.size - 1), y : this.h/2 }, bodyB : body, stiffness : 0.1 });
 
-	// 	this.bot.push( body );
+		this.top.push( body );
 
-	// 	Matter.World.add( engine.world, [ body, constrain ] );
-	// 	if( i == 0 ) Matter.World.add( engine.world, Matter.Constraint.create({ pointA : { x : - 10, y : 200 }, bodyB : body, length : 0, stiffness : .1 }) );
-	// 	if( i > 0 ) Matter.World.add( engine.world, Matter.Constraint.create({ bodyA : this.bot[i-1], bodyB : body, length : 0, stiffness : .1 }) );
-	// 	if( i == this.size - 1 ) Matter.World.add( engine.world, Matter.Constraint.create({ pointA : { x : (i + 1) * 10, y : 200 }, bodyB : body, length : 0, stiffness : .1 }) );
-	// }
+		Matter.World.add( engine.world, [ body, constrain ] );
+		if( i == 0 ) Matter.World.add( engine.world, Matter.Constraint.create({ pointA : { x : - 10, y : this.h/2 }, bodyB : body, length : 0, stiffness : .1 }) );
+		if( i > 0 ) Matter.World.add( engine.world, Matter.Constraint.create({ bodyA : this.top[i-1], bodyB : body, length : 0, stiffness : .1 }) );
+		if( i == this.size - 1 ) Matter.World.add( engine.world, Matter.Constraint.create({ pointA : { x : (i + 1) * 10, y : this.h/2 }, bodyB : body, length : 0, stiffness : .1 }) );
 
-	// Matter.Engine.run(engine);
+		var body = Matter.Bodies.circle( this.logoMargin * this.w + ( this.w - ( this.logoMargin * 2 * this.w ) ) * i / (this.size - 1), this.h/2, 2, { collisionFilter : 0, mass :  1 } );
+		var constrain = Matter.Constraint.create({ pointA : { x : this.logoMargin * this.w + ( this.w - ( this.logoMargin * 2 * this.w ) ) * i / (this.size - 1), y : this.h/2 }, bodyB : body, stiffness : .1 });
+
+		this.bot.push( body );
+
+		Matter.World.add( engine.world, [ body, constrain ] );
+		if( i == 0 ) Matter.World.add( engine.world, Matter.Constraint.create({ pointA : { x : - 10, y : this.h/2 }, bodyB : body, length : 0, stiffness : .1 }) );
+		if( i > 0 ) Matter.World.add( engine.world, Matter.Constraint.create({ bodyA : this.bot[i-1], bodyB : body, length : 0, stiffness : .1 }) );
+		if( i == this.size - 1 ) Matter.World.add( engine.world, Matter.Constraint.create({ pointA : { x : (i + 1) * 10, y : this.h/2 }, bodyB : body, length : 0, stiffness : .1 }) );
+	}
+
+	Matter.Engine.run(engine);
 }
 
-AudioData.prototype.makeAnalyser = function( time ) {
-	var audioCtx = new ( window.AudioContext || window.webkitAudioContext )();
-	this.domain = audioCtx.createAnalyser();
-	this.domain.fftSize = this.size * 2;
-	this.domainArray = new Uint8Array(this.size);
-
-	this.frequency = audioCtx.createAnalyser();
-	this.frequency.fftSize = this.size * 2;
-	this.frequencyArray = new Uint8Array(this.size);
-
-	var source = audioCtx.createMediaElementSource(window.audioDada);
-	source.connect(this.domain);
-	source.connect(this.frequency);
-	
-	source.connect(audioCtx.destination);
-
-	audioCtx.close();
-};
-
 AudioData.prototype.playPause = function( ) {
-	window.audioDada.src = 'media/t2.mp3';
+	var id = ( Math.floor(Math.random() * 2) + 1 );
+	window._DADADADA.audio.src = 'media/t'+ id +'.mp3';
 	this.playing = !this.playing;
-	if( this.playing ) window.audioDada.play();
-	else window.audioDada.pause();
+	if( this.playing ){
+		if( window._DADADADA.current && window._DADADADA.current !== this.parent && window._DADADADA.current.audioData.playing ){
+			window._DADADADA.current.audioData.playing = false;
+			window._DADADADA.audio.pause();
+		}
+		window._DADADADA.current = this.parent;
+		window._DADADADA.audio.play();
+	} else {
+		window._DADADADA.audio.pause();
+	}
 };
 
 AudioData.prototype.updateTexture = function( ) {
-	
-
 	var v1 = Math.round( ( this.simplex.noise2D( this.time, 0.1 ) + 1 ) / 2 * this.size );
-	var val1 = Math.round( this.frequencyArray[ v1 ] / 255 * this.size );
+	var val1 = Math.round( window._DADADADA.frequencyArray[ v1 ] / 255 * this.size );
 
-	for( var i = 0 ; i < val1 ; i ++ ) if( this.playing )  Matter.Body.setPosition(  this.top[i], { x : i * 10, y : 200 - ( ( this.frequencyArray[val1-i-1]) / 255 * 50 ) } );
-	for( var i = val1 ; i < this.size ; i ++ ) if( this.playing )  Matter.Body.setPosition(  this.top[i], { x : i * 10, y : 200 - ( ( this.frequencyArray[i-val1]) / 255 * 50 ) } );
-	for( var i = 0 ; i < val1 ; i ++ ) this.top[i].position.x = i * 10;
+	for( var i = 0 ; i < val1 ; i ++ ) if( this.playing )  Matter.Body.setPosition(  this.top[i], { x : this.logoMargin * this.w + ( this.w - ( this.logoMargin * 2 * this.w ) ) * i / (this.size - 1), y : this.h/2 - ( ( window._DADADADA.frequencyArray[val1-i-1]) / 255 * 50 ) } );
+	for( var i = val1 ; i < this.size ; i ++ ) if( this.playing )  Matter.Body.setPosition(  this.top[i], { x : this.logoMargin * this.w + ( this.w - ( this.logoMargin * 2 * this.w ) ) * i / (this.size - 1), y : this.h/2 - ( ( window._DADADADA.frequencyArray[i-val1]) / 255 * 50 ) } );
+	for( var i = 0 ; i < val1 ; i ++ ) this.top[i].position.x = this.logoMargin * this.w + ( this.w - ( this.logoMargin * 2 * this.w ) ) * i / (this.size - 1);
 
 	var v2 = Math.round( ( this.simplex.noise2D( this.time, 0.9 ) + 1 ) / 2 * this.size );
-	var val2 = Math.round( this.frequencyArray[ v2 ] / 255 * this.size );
+	var val2 = Math.round( window._DADADADA.frequencyArray[ v2 ] / 255 * this.size );
 
-	for( var i = 0 ; i < val2 ; i ++ ) if( this.playing )  Matter.Body.setPosition(  this.bot[i], { x : i * 10, y : 200 + ( ( this.frequencyArray[val2-i-1]) / 255 * 50 ) } );
-	for( var i = val2 ; i < this.size ; i ++ ) if( this.playing )  Matter.Body.setPosition(  this.bot[i], { x : i * 10, y : 200 + ( ( this.frequencyArray[i-val2]) / 255 * 50 ) } );
-	for( var i = 0 ; i < val2 ; i ++ ) this.bot[i].position.x = i * 10;
+	for( var i = 0 ; i < val2 ; i ++ ) if( this.playing )  Matter.Body.setPosition(  this.bot[i], { x : this.logoMargin * this.w + ( this.w - ( this.logoMargin * 2 * this.w ) ) * i / (this.size - 1), y : this.h/2 + ( ( window._DADADADA.frequencyArray[val2-i-1]) / 255 * 50 ) } );
+	for( var i = val2 ; i < this.size ; i ++ ) if( this.playing )  Matter.Body.setPosition(  this.bot[i], { x : this.logoMargin * this.w + ( this.w - ( this.logoMargin * 2 * this.w ) ) * i / (this.size - 1), y : this.h/2 + ( ( window._DADADADA.frequencyArray[i-val2]) / 255 * 50 ) } );
+	for( var i = 0 ; i < val2 ; i ++ ) this.bot[i].position.x = this.logoMargin * this.w + ( this.w - ( this.logoMargin * 2 * this.w ) ) * i / (this.size - 1);
 
 	var vals = new Uint8Array(this.size * 3);
 	
 	for( var i = 0 ; i < this.size ; i++ ){
-		vals[ i * 3 ] =  ( 200 - this.top[i].position.y  ) / 50 * 255 ;
-		vals[ i * 3 + 1 ] = ( this.bot[i].position.y - 200  ) / 50 * 255 ;
+		vals[ i * 3 ] =  ( this.h/2 - this.top[i].position.y  ) / 50 * 255 ;
+		vals[ i * 3 + 1 ] = ( this.bot[i].position.y - this.h/2  ) / 50 * 255 ;
 		vals[ i * 3 + 2 ] = 0;
 	}
-
 };
 
 AudioData.prototype.step = function( time ) {
-	console.log(window.audioDada.currentTime)
+	if(!this.playing) return;
 	this.time += this.timeInc;
-	// this.domain.getByteTimeDomainData(this.domainArray);
-	// this.frequency.getByteFrequencyData(this.frequencyArray);
-	// this.updateTexture();
+	window._DADADADA.domain.getByteTimeDomainData( window._DADADADA.domainArray );
+	window._DADADADA.frequency.getByteFrequencyData( window._DADADADA.frequencyArray );
+	this.updateTexture();
 };
 
 module.exports = AudioData;

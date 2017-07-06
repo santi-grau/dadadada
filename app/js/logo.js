@@ -7,10 +7,16 @@ var Logo = function( element ){
 	this.element = element;
 
 	this.active = true;
-
+	
+	this.logoMargin = 0.06;
+	
 	this.firstResize = true;
 	this.size = this.oldSize = [ this.element.offsetWidth, this.element.offsetHeight ];
 
+	if(!window._DADADADA) {
+		console.log('make')
+		window._DADADADA = {};
+	}
 
 	var devicePixelRatio = window.devicePixelRatio || 1;
 
@@ -23,6 +29,14 @@ var Logo = function( element ){
 	this.canvas.style.width = this.element.offsetWidth + "px";
 	this.canvas.style.height = this.element.offsetHeight + "px";
 	
+
+
+	// this.audioDada = new Audio();
+	// this.audioDada.src = '../media/t2.mp3';
+	// this.audioDada.controls = true;
+	// this.audioDada.autoplay = false;
+	// this.audioDada.setAttribute('type','audio/mpeg');
+	// document.body.append(this.audioDada)
 
 	// this.renderer = new THREE.WebGLRenderer( { alpha : true, antialias : true } );
 	// this.element.appendChild( this.renderer.domElement );

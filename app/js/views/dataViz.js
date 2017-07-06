@@ -19,7 +19,7 @@ var Dataviz = function( parent ){
 	this.timeLocation = this.gl.getUniformLocation( this.currentProgram, 'time' );
 	this.resolutionLocation = this.gl.getUniformLocation( this.currentProgram, 'resolution' );
  	
- 	if( !window.texture ) new Texture( this, 2048 );
+ 	if( !window._DADADADA.texture ) new Texture( this, 2048 );
 	else this.makeTexture();
 
 	this.resize();
@@ -39,8 +39,10 @@ Dataviz.prototype.makeTexture = function( ){
 		_this.gl.texParameteri(_this.gl.TEXTURE_2D, _this.gl.TEXTURE_MAG_FILTER, _this.gl.NEAREST);
 
 		_this.textureReady = true;
+
+		_this.gl.texImage2D( _this.gl.TEXTURE_2D, 0, _this.gl.RGBA, _this.gl.RGBA, _this.gl.UNSIGNED_BYTE, _this.texture );
 	}
-	this.texture.src = window.texture;
+	this.texture.src = window._DADADADA.texture;
 }
 
 Dataviz.prototype.createProgram = function( vertex, fragment ){
@@ -80,9 +82,6 @@ Dataviz.prototype.render = function(){
 	// Set values to program variables
 	this.gl.uniform1f( this.timeLocation, this.parameters.time / 1000 );
 	this.gl.uniform2f( this.resolutionLocation, this.parameters.screenWidth, this.parameters.screenHeight );
-
-	// this.gl.bindTexture( this.gl.TEXTURE_2D, this.texture);
-	this.gl.texImage2D( this.gl.TEXTURE_2D, 0, this.gl.RGBA, this.gl.RGBA, this.gl.UNSIGNED_BYTE, this.texture );
  
 	// Render geometry
 	this.gl.bindBuffer( this.gl.ARRAY_BUFFER, this.buffer );
