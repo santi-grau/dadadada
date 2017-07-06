@@ -1,3 +1,4 @@
+var Physics = require('./views/physics');
 var AudioData = require('./views/audioData');
 var Debugger = require('./views/debugger');
 var Dataviz = require('./views/dataViz');
@@ -12,10 +13,7 @@ var Logo = function( element ){
 	this.firstResize = true;
 	this.size = this.oldSize = [ this.element.offsetWidth, this.element.offsetHeight ];
 
-	if(!window._DADADADA) {
-		console.log('make')
-		window._DADADADA = {};
-	}
+	if(!window._DADADADA) window._DADADADA = {};
 
 	var devicePixelRatio = window.devicePixelRatio || 1;
 
@@ -29,6 +27,7 @@ var Logo = function( element ){
 	this.canvas.style.height = this.element.offsetHeight + "px";
 
 	this.audioData = new AudioData( this );
+	this.physics = new Physics( this );
 	this.dataViz = new Dataviz( this );
 
 	element.addEventListener( 'click', this.click.bind( this ) );
@@ -69,8 +68,9 @@ Logo.prototype.resizeEnd = function( ) {
 
 Logo.prototype.step = function( time ) {
 	window.requestAnimationFrame( this.step.bind( this ) );
-	this.audioData.step();
-	this.dataViz.step();
+	this.audioData.step( time );
+	this.dataViz.step( time );
+	this.physics.step( time );
 	this.size = [ this.element.offsetWidth, this.element.offsetHeight ];
 	if( this.oldSize[0] !== this.size[0] || this.oldSize[1] !== this.size[1] ) this.resize();
 	this.oldSize = this.size;
