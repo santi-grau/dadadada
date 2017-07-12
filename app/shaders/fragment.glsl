@@ -1,11 +1,9 @@
 uniform float time;
+uniform float ratio;
 uniform vec2 resolution;
+uniform float topVal[16];
+uniform float botVal[16];
 uniform sampler2D u_texture;
-// varying vec2 vUv;
-
-// uniform float time;
-// uniform sampler2D logo;
-// uniform sampler2D waveForm;
 
 #define M_PI 3.14159265358979
 
@@ -47,16 +45,26 @@ float cnoise(vec2 P) {
 }
 
 void main( void ) {
-	float ratio = 0.182382615444315;
- 	
 	vec2 uv = gl_FragCoord.xy / resolution.xy;
 	uv.y = 1.0 - uv.y;
 
 	float q1 = 1.0;
 	float q2 = 1.0;
 
-	q1 = 0.0;
-	q2 = 0.0;
+
+	if( uv.x >= 0.0 && uv.x < 0.25 ){
+		q1 = smoothstep(0.0,0.25,uv.x) * (topVal[4] - topVal[0]) + topVal[0];
+		q2 = smoothstep(0.0,0.25,uv.x) * (botVal[4] - botVal[0]) + botVal[0];
+	} else if( uv.x >= 0.25 && uv.x < 0.5 ){
+		q1 = smoothstep(0.25,0.5,uv.x) * (topVal[8] - topVal[4]) + topVal[4];
+		q2 = smoothstep(0.25,0.5,uv.x) * (botVal[8] - botVal[4]) + botVal[4];
+	} else if( uv.x >= 0.5 && uv.x < 0.75 ){
+		q1 = smoothstep(0.5,0.75,uv.x) * (topVal[12] - topVal[8]) + topVal[8];
+		q2 = smoothstep(0.5,0.75,uv.x) * (botVal[12] - botVal[8]) + botVal[8];
+	} else if( uv.x >= 0.75 && uv.x < 1.0 ){
+		q1 = smoothstep(0.75,1.0,uv.x) * (topVal[15] - topVal[12]) + topVal[12];
+		q2 = smoothstep(0.75,1.0,uv.x) * (botVal[15] - botVal[12]) + botVal[12];
+	}
 
 	// q1 = min( 1.0, max( 0.001, ( uv.x - 0.06 ) / ( 1.0 - 0.06 * 2.0 ) ) );
 	// q2 = min( 1.0, max( 0.001, ( uv.x - 0.06 ) / ( 1.0 - 0.06 * 2.0 ) ) );
@@ -78,5 +86,5 @@ void main( void ) {
 	vec4 s1 = texture2D( u_texture, vec2( uv.x, a ) );
 	if( uv.y > 0.5 ) s1 = texture2D( u_texture, vec2( uv.x, b ) );
 	
-	gl_FragColor = vec4( uv.x, s1.a, uv.y, 1.0 );
+	gl_FragColor = vec4( q1, s1.a, 0.0, 1.0 );
 }

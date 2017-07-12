@@ -27,8 +27,8 @@ var Logo = function( element ){
 	this.canvas.style.height = this.element.offsetHeight + "px";
 
 	this.audioData = new AudioData( this );
-	this.physics = new Physics( this );
 	this.dataViz = new Dataviz( this );
+	this.physics = new Physics( this );
 
 	element.addEventListener( 'click', this.click.bind( this ) );
 	window.addEventListener( 'scroll', this.scroll.bind( this ) );

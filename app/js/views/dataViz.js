@@ -14,10 +14,12 @@ var Dataviz = function( parent ){
 	this.gl.bindBuffer( this.gl.ARRAY_BUFFER, this.buffer );
 	this.gl.bufferData( this.gl.ARRAY_BUFFER, new Float32Array( [ - 1.0, - 1.0, 1.0, - 1.0, - 1.0, 1.0, 1.0, - 1.0, 1.0, 1.0, - 1.0, 1.0 ] ), this.gl.STATIC_DRAW );
 	this.currentProgram = this.createProgram( vertexShader, fragmentShader );
-	this.scaleLocation = this.gl.getUniformLocation( this.currentProgram, 'scale' );
 	this.timeLocation = this.gl.getUniformLocation( this.currentProgram, 'time' );
+	this.logoRatio = this.gl.getUniformLocation( this.currentProgram, 'ratio' );	
 	this.resolutionLocation = this.gl.getUniformLocation( this.currentProgram, 'resolution' );
- 	
+	this.topVal = this.gl.getUniformLocation( this.currentProgram, 'topVal' );
+	this.botVal = this.gl.getUniformLocation( this.currentProgram, 'botVal' );
+ 	// console.log(this.gl)
  	if( !window._DADADADA.texture ) new Texture( this, 2048 );
 	else this.makeTexture();
 
@@ -80,7 +82,10 @@ Dataviz.prototype.render = function(){
  
 	// Set values to program variables
 	this.gl.uniform1f( this.timeLocation, this.parameters.time / 1000 );
+	this.gl.uniform1f( this.logoRatio, window._DADADADA.logoRatio );
 	this.gl.uniform2f( this.resolutionLocation, this.parameters.screenWidth, this.parameters.screenHeight );
+	this.gl.uniform1fv( this.topVal, window._DADADADA.topVal );
+	this.gl.uniform1fv( this.botVal, window._DADADADA.botVal );
  
 	// Render geometry
 	this.gl.bindBuffer( this.gl.ARRAY_BUFFER, this.buffer );

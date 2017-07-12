@@ -3,16 +3,25 @@
 
 var AudioData = function( parent ) {
 	this.parent = parent;
-	this.size = 32;
+	this.size = 16;
 
 	this.time = 0;
 	this.timeInc = 0.001;
+
+	if( !window._DADADADA.topVal ){
+		window._DADADADA.topVal = [];
+		for( var i = 0 ; i < this.size ; i++ ) window._DADADADA.topVal[i] = 0;
+	}
+	if( !window._DADADADA.botVal ){
+		window._DADADADA.botVal = [];
+		for( var i = 0 ; i < this.size ; i++ ) window._DADADADA.botVal[i] = 0;
+	}
 
 	if( !window._DADADADA.audio ){
 		window._DADADADA.audio = new Audio();
 		window._DADADADA.audio.controls = true;
 		window._DADADADA.audio.autoplay = false;
-		window._DADADADA.audio.setAttribute('type','audio/mpeg');
+		// window._DADADADA.audio.setAttribute('type','audio/mpeg');
 	}
 	if( !window._DADADADA.audioCtx ) window._DADADADA.audioCtx = new ( window.AudioContext || window.webkitAudioContext )();
 	if( !window._DADADADA.domain ){
@@ -53,6 +62,7 @@ AudioData.prototype.playPause = function( ) {
 
 AudioData.prototype.step = function( time ) {
 	if(!this.playing) return;
+	// console.log(window._DADADADA.topVal)
 	this.time += this.timeInc;
 	window._DADADADA.domain.getByteTimeDomainData( window._DADADADA.domainArray );
 	window._DADADADA.frequency.getByteFrequencyData( window._DADADADA.frequencyArray );

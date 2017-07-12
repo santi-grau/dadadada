@@ -11,6 +11,10 @@ var Texture = function( parent, size ){
 	canvas.height = size;
 	var ctx = canvas.getContext('2d');
 
+	var w = ctx.canvas.width - ( canvas.width * logoMargin ) * 2;
+	var h = w * logoAR;
+	window._DADADADA.logoRatio = h / size;
+
  	var img = new Image();
  	var _this = this;
  	img.onload = function () {
