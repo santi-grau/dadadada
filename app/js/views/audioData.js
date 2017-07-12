@@ -21,7 +21,6 @@ var AudioData = function( parent ) {
 		window._DADADADA.audio = new Audio();
 		window._DADADADA.audio.controls = true;
 		window._DADADADA.audio.autoplay = false;
-		// window._DADADADA.audio.setAttribute('type','audio/mpeg');
 	}
 	if( !window._DADADADA.audioCtx ) window._DADADADA.audioCtx = new ( window.AudioContext || window.webkitAudioContext )();
 	if( !window._DADADADA.domain ){

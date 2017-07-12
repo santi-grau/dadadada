@@ -19,6 +19,7 @@ var Dataviz = function( parent ){
 	this.resolutionLocation = this.gl.getUniformLocation( this.currentProgram, 'resolution' );
 	this.topVal = this.gl.getUniformLocation( this.currentProgram, 'topVal' );
 	this.botVal = this.gl.getUniformLocation( this.currentProgram, 'botVal' );
+	this.logoMargin = this.gl.getUniformLocation( this.currentProgram, 'logoMargin' );
  	// console.log(this.gl)
  	if( !window._DADADADA.texture ) new Texture( this, 2048 );
 	else this.makeTexture();
@@ -74,7 +75,7 @@ Dataviz.prototype.createShader = function( src, type ){
 }
 
 Dataviz.prototype.render = function(){
-	if ( !this.currentProgram ) return;
+	// if ( !this.currentProgram ) return;
 	this.parameters.time = new Date().getTime() - this.parameters.start_time;
 	this.gl.clear( this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT );
 	// Load program into GPU
@@ -86,6 +87,7 @@ Dataviz.prototype.render = function(){
 	this.gl.uniform2f( this.resolutionLocation, this.parameters.screenWidth, this.parameters.screenHeight );
 	this.gl.uniform1fv( this.topVal, window._DADADADA.topVal );
 	this.gl.uniform1fv( this.botVal, window._DADADADA.botVal );
+	this.gl.uniform1f( this.logoMargin, this.parent.logoMargin );
  
 	// Render geometry
 	this.gl.bindBuffer( this.gl.ARRAY_BUFFER, this.buffer );

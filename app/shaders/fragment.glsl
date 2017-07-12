@@ -3,6 +3,7 @@ uniform float ratio;
 uniform vec2 resolution;
 uniform float topVal[16];
 uniform float botVal[16];
+uniform float logoMargin;
 uniform sampler2D u_texture;
 
 #define M_PI 3.14159265358979
@@ -52,19 +53,16 @@ void main( void ) {
 	float q2 = 1.0;
 
 
-	if( uv.x >= 0.0 && uv.x < 0.25 ){
-		q1 = smoothstep(0.0,0.25,uv.x) * (topVal[4] - topVal[0]) + topVal[0];
-		q2 = smoothstep(0.0,0.25,uv.x) * (botVal[4] - botVal[0]) + botVal[0];
-	} else if( uv.x >= 0.25 && uv.x < 0.5 ){
-		q1 = smoothstep(0.25,0.5,uv.x) * (topVal[8] - topVal[4]) + topVal[4];
-		q2 = smoothstep(0.25,0.5,uv.x) * (botVal[8] - botVal[4]) + botVal[4];
-	} else if( uv.x >= 0.5 && uv.x < 0.75 ){
-		q1 = smoothstep(0.5,0.75,uv.x) * (topVal[12] - topVal[8]) + topVal[8];
-		q2 = smoothstep(0.5,0.75,uv.x) * (botVal[12] - botVal[8]) + botVal[8];
-	} else if( uv.x >= 0.75 && uv.x < 1.0 ){
-		q1 = smoothstep(0.75,1.0,uv.x) * (topVal[15] - topVal[12]) + topVal[12];
-		q2 = smoothstep(0.75,1.0,uv.x) * (botVal[15] - botVal[12]) + botVal[12];
+	// float q3 = mod( max( 0.0, uv.x - logoMargin ) , ( 1.0 - logoMargin ) / 16.0 ) * ( 17.0 );
+	// if( uv.x >= 1.0 - logoMargin ) q3 = 1.0;
+
+	for( int i = 1 ; i < 16 ; i++ ){
+		if( uv.x >= logoMargin + (float(i) - 1.0) / 16.0 && uv.x < logoMargin + (float(i)) / 16.0 ){
+			q1 = smoothstep( logoMargin + (float(i) - 1.0) / 16.0 , logoMargin + (float(i)) / 16.0,uv.x) * (topVal[i] - topVal[i-1]) + topVal[i-1];
+			q2 = smoothstep( logoMargin + (float(i) - 1.0) / 16.0 , logoMargin + (float(i)) / 16.0,uv.x) * (botVal[i] - botVal[i-1]) + botVal[i-1];
+		}
 	}
+
 
 	// q1 = min( 1.0, max( 0.001, ( uv.x - 0.06 ) / ( 1.0 - 0.06 * 2.0 ) ) );
 	// q2 = min( 1.0, max( 0.001, ( uv.x - 0.06 ) / ( 1.0 - 0.06 * 2.0 ) ) );
@@ -86,5 +84,5 @@ void main( void ) {
 	vec4 s1 = texture2D( u_texture, vec2( uv.x, a ) );
 	if( uv.y > 0.5 ) s1 = texture2D( u_texture, vec2( uv.x, b ) );
 	
-	gl_FragColor = vec4( q1, s1.a, 0.0, 1.0 );
+	gl_FragColor = vec4( 0.0, s1.a, 0.0, 1.0 );
 }

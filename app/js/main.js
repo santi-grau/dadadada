@@ -3,7 +3,7 @@ var Logo = require('./logo');
 var App = function() {
 	var logos = document.getElementsByClassName('dadadada');
 	this.logos = [];
-	for( var i = 0 ; i < logos.length ; i++ ) this.logos.push( new Logo( logos[i] ) );
+	for( var i = 0 ; i < 2 ; i++ ) this.logos.push( new Logo( logos[i] ) );
 
 	this.step();
 }
