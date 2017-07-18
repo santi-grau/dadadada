@@ -18,7 +18,7 @@ module.exports = function(grunt) {
           dot: true,
           cwd: "app",
           src: [
-            "scripts/**/*"
+            "audio/**/*"
           ],
           dest: "docs"
         }]
@@ -61,7 +61,7 @@ module.exports = function(grunt) {
   // Build Tasks
   grunt.registerTask('build', [
     'clean',
-    // 'copy',
+    'copy',
     'pug',
     'stylus'
   ]);
