@@ -61,7 +61,7 @@ module.exports = function(grunt) {
   // Build Tasks
   grunt.registerTask('build', [
     'clean',
-    'copy',
+    // 'copy',
     'pug',
     'stylus'
   ]);
