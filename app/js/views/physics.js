@@ -8,22 +8,22 @@ var Physics = function( parent ){
 	var engine = Matter.Engine.create();
 
 	// create a renderer
-	var render = Matter.Render.create({
-		element: this.parent.element,
-		engine: engine,
-		options : {
-			width : this.parent.element.offsetWidth,
-			height : this.parent.element.offsetHeight
-		}
-	});
+	// var render = Matter.Render.create({
+	// 	element: this.parent.element,
+	// 	engine: engine,
+	// 	options : {
+	// 		width : this.parent.element.offsetWidth,
+	// 		height : this.parent.element.offsetHeight
+	// 	}
+	// });
 	
-	render.canvas.style.position = 'absolute';
-	render.canvas.style.top = '0px';
-	render.canvas.style.left = '0px';
-	render.canvas.style['z-index'] = '10';
+	// render.canvas.style.position = 'absolute';
+	// render.canvas.style.top = '0px';
+	// render.canvas.style.left = '0px';
+	// render.canvas.style['z-index'] = '10';
 	
-	Matter.Render.run(render);
-	render.canvas.style.background = 'rgba(0,0,0,0)';
+	// Matter.Render.run(render);
+	// render.canvas.style.background = 'rgba(0,0,0,0)';
 
 	engine.world.gravity.y = 0;
 
