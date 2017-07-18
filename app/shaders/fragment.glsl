@@ -5,6 +5,7 @@ uniform float topVal[16];
 uniform float botVal[16];
 uniform float logoMargin;
 uniform sampler2D u_texture;
+uniform vec3 logoColor;
 
 #define M_PI 3.14159265358979
 
@@ -52,10 +53,6 @@ void main( void ) {
 	float q1 = 1.0;
 	float q2 = 1.0;
 
-
-	// float q3 = mod( max( 0.0, uv.x - logoMargin ) , ( 1.0 - logoMargin ) / 16.0 ) * ( 17.0 );
-	// if( uv.x >= 1.0 - logoMargin ) q3 = 1.0;
-
 	for( int i = 1 ; i < 16 ; i++ ){
 		if( uv.x >= logoMargin + (float(i) - 1.0) / 16.0 && uv.x < logoMargin + (float(i)) / 16.0 ){
 			q1 = smoothstep( logoMargin + (float(i) - 1.0) / 16.0 , logoMargin + (float(i)) / 16.0,uv.x) * (topVal[i] - topVal[i-1]) + topVal[i-1];
@@ -84,5 +81,5 @@ void main( void ) {
 	vec4 s1 = texture2D( u_texture, vec2( uv.x, a ) );
 	if( uv.y > 0.5 ) s1 = texture2D( u_texture, vec2( uv.x, b ) );
 	
-	gl_FragColor = vec4( 0.0, s1.a, 0.0, 1.0 );
+	gl_FragColor = vec4( logoColor * s1.a, s1.a );
 }

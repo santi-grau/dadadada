@@ -1,6 +1,6 @@
 var Physics = require('./views/physics');
 var AudioData = require('./views/audioData');
-var Debugger = require('./views/debugger');
+
 var Dataviz = require('./views/dataViz');
 
 var Logo = function( element ){
@@ -26,6 +26,9 @@ var Logo = function( element ){
 	this.canvas.style.width = this.element.offsetWidth + "px";
 	this.canvas.style.height = this.element.offsetHeight + "px";
 
+	this.color = this.getColor( element.getAttribute( 'data-color' ) ) || [ 1, 1, 1 ];
+	this.audio = element.getAttribute( 'data-audio' );
+
 	this.audioData = new AudioData( this );
 	this.dataViz = new Dataviz( this );
 	this.physics = new Physics( this );
@@ -37,6 +40,11 @@ var Logo = function( element ){
 	this.resize();
 	// this.active = false;
 	// this.checkActive();
+}
+
+Logo.prototype.getColor = function( hex ) {
+	var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+	return result ? [ parseInt(result[1], 16) / 255, parseInt(result[2], 16) / 255 , parseInt(result[3], 16) / 255 ] : null;
 }
 
 Logo.prototype.checkActive = function( ) {

@@ -20,6 +20,7 @@ var Dataviz = function( parent ){
 	this.topVal = this.gl.getUniformLocation( this.currentProgram, 'topVal' );
 	this.botVal = this.gl.getUniformLocation( this.currentProgram, 'botVal' );
 	this.logoMargin = this.gl.getUniformLocation( this.currentProgram, 'logoMargin' );
+	this.logoColor = this.gl.getUniformLocation( this.currentProgram, 'logoColor' );
  	// console.log(this.gl)
  	if( !window._DADADADA.texture ) new Texture( this, 2048 );
 	else this.makeTexture();
@@ -88,6 +89,8 @@ Dataviz.prototype.render = function(){
 	this.gl.uniform1fv( this.topVal, window._DADADADA.topVal );
 	this.gl.uniform1fv( this.botVal, window._DADADADA.botVal );
 	this.gl.uniform1f( this.logoMargin, this.parent.logoMargin );
+	this.gl.uniform3f( this.logoColor, this.parent.color[0], this.parent.color[1], this.parent.color[2] );
+
  
 	// Render geometry
 	this.gl.bindBuffer( this.gl.ARRAY_BUFFER, this.buffer );

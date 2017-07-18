@@ -96,6 +96,7 @@ Physics.prototype.step = function( time ){
 		var t = ( this.simplex.noise2D( i / ( this.parent.audioData.size - 1 ) + this.parent.audioData.time, 0.75 ) + 1 ) / 2;
 		Matter.Body.setPosition(  this.bot[i], { x : this.logoMargin * this.w + ( this.w - ( this.logoMargin * 2 * this.w ) ) * i / (this.parent.audioData.size - 1), y : this.h/2 + this.w * window._DADADADA.logoRatio / 2 + ( ( window._DADADADA.frequencyArray[i-val2]) / 255 * dist * t ) } );
 		window._DADADADA.botVal[i] = window._DADADADA.frequencyArray[i-val2] / 255 * t;
+		// window._DADADADA.botVal[i] = (this.bot[i].position.y - ( this.h/2 + this.w * window._DADADADA.logoRatio / 2 ))/dist;
 	}
 	for( var i = 0 ; i < val2 ; i ++ ) this.bot[i].position.x = this.logoMargin * this.w + ( this.w - ( this.logoMargin * 2 * this.w ) ) * i / (this.parent.audioData.size - 1);
 }

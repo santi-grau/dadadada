@@ -1,6 +1,3 @@
-// var Matter = require('matter-js');
-// var SimplexNoise = require('simplex-noise');
-
 var AudioData = function( parent ) {
 	this.parent = parent;
 	this.size = 16;
@@ -44,8 +41,7 @@ var AudioData = function( parent ) {
 }
 
 AudioData.prototype.playPause = function( ) {
-	var id = ( Math.floor(Math.random() * 2) + 1 );
-	window._DADADADA.audio.src = 'media/t'+ id +'.mp3';
+	window._DADADADA.audio.src = this.parent.audio;
 	this.playing = !this.playing;
 	if( this.playing ){
 		if( window._DADADADA.current && window._DADADADA.current !== this.parent && window._DADADADA.current.audioData.playing ){
@@ -60,7 +56,7 @@ AudioData.prototype.playPause = function( ) {
 };
 
 AudioData.prototype.step = function( time ) {
-	if(!this.playing) return;
+	// if(!this.playing) return;
 	// console.log(window._DADADADA.topVal)
 	this.time += this.timeInc;
 	window._DADADADA.domain.getByteTimeDomainData( window._DADADADA.domainArray );
